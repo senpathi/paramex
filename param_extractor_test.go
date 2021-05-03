@@ -55,6 +55,7 @@ func TestParamExtractor_ExtractQuery(t *testing.T) {
 		t.Errorf(`error extracting queries due to %v`, err)
 	}
 
+	fmt.Println(`extracted results ...`)
 	fmt.Println(fmt.Sprintf(`request headers := %v`, headers))
 	fmt.Println(fmt.Sprintf(`request forms := %v`, forms))
 	fmt.Println(fmt.Sprintf(`request queries := %v`, queries))
