@@ -22,6 +22,7 @@ func NewParamExtractor() Extractor {
 	return extractor{}
 }
 
+// ExtractHeaders extract http headers from sent request and binds to v
 func (p extractor) ExtractHeaders(v interface{}, req *http.Request) error {
 	return p.extract(v, req, func(key string) (string, bool) {
 		str := req.Header.Get(key)
@@ -32,6 +33,7 @@ func (p extractor) ExtractHeaders(v interface{}, req *http.Request) error {
 	})
 }
 
+// ExtractQueries extract http url parameters from sent request and binds to v
 func (p extractor) ExtractQueries(v interface{}, req *http.Request) error {
 	return p.extract(v, req, func(key string) (string, bool) {
 		str := req.URL.Query().Get(key)
@@ -42,6 +44,7 @@ func (p extractor) ExtractQueries(v interface{}, req *http.Request) error {
 	})
 }
 
+// ExtractForms extract http form values from sent request and binds to v
 func (p extractor) ExtractForms(v interface{}, req *http.Request) error {
 	return p.extract(v, req, func(key string) (string, bool) {
 		str := req.FormValue(key)
