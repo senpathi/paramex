@@ -1,5 +1,7 @@
 # paramex (on the way)
 
+![paramex_logo](./docs/images/logo.png)
+
 [![Godoc](http://img.shields.io/badge/go-documentation-blue.svg?style=flat-square)](https://pkg.go.dev/github.com/senpathi/paramex)
 [![build](https://github.com/senpathi/paramex/workflows/build/badge.svg)](https://github.com/senpathi/paramex/actions)
 [![Coverage](https://codecov.io/gh/senpathi/paramex/branch/master/graph/badge.svg)](https://codecov.io/gh/senpathi/paramex)
