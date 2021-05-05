@@ -226,6 +226,57 @@ func TestExtractor_Errors(t *testing.T) {
 			t.Errorf(`expexted [%v], but received [%v]`, exErr, err.Error())
 		}
 	})
+
+	t.Run(`test unmarshal type error "int64"`, func(t *testing.T) {
+		obj := int64Error{}
+		err := extractor.ExtractHeaders(&obj, req)
+		if err == nil {
+			t.Errorf(`expected "ErrorUnmarshalType", but received %v`, nil)
+			return
+		}
+		_, ok := err.(ErrorUnmarshalType)
+		if !ok {
+			t.Errorf(`expected "ErrorUnmarshalType", but received %v`, reflect.TypeOf(err))
+		}
+		exErr := `error unmarshalling [header_name] into [int64] due to strconv.ParseInt: parsing "header_name": invalid syntax`
+		if err.Error() != exErr {
+			t.Errorf(`expexted [%v], but received [%v]`, exErr, err.Error())
+		}
+	})
+
+	t.Run(`test unmarshal type error "float32"`, func(t *testing.T) {
+		obj := float32Error{}
+		err := extractor.ExtractHeaders(&obj, req)
+		if err == nil {
+			t.Errorf(`expected "ErrorUnmarshalType", but received %v`, nil)
+			return
+		}
+		_, ok := err.(ErrorUnmarshalType)
+		if !ok {
+			t.Errorf(`expected "ErrorUnmarshalType", but received %v`, reflect.TypeOf(err))
+		}
+		exErr := `error unmarshalling [header_name] into [float32] due to strconv.ParseFloat: parsing "header_name": invalid syntax`
+		if err.Error() != exErr {
+			t.Errorf(`expexted [%v], but received [%v]`, exErr, err.Error())
+		}
+	})
+
+	t.Run(`test unmarshal type error "float64"`, func(t *testing.T) {
+		obj := float64Error{}
+		err := extractor.ExtractHeaders(&obj, req)
+		if err == nil {
+			t.Errorf(`expected "ErrorUnmarshalType", but received %v`, nil)
+			return
+		}
+		_, ok := err.(ErrorUnmarshalType)
+		if !ok {
+			t.Errorf(`expected "ErrorUnmarshalType", but received %v`, reflect.TypeOf(err))
+		}
+		exErr := `error unmarshalling [header_name] into [float64] due to strconv.ParseFloat: parsing "header_name": invalid syntax`
+		if err.Error() != exErr {
+			t.Errorf(`expexted [%v], but received [%v]`, exErr, err.Error())
+		}
+	})
 }
 
 type headerParams struct {
