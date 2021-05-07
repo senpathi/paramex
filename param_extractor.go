@@ -11,13 +11,19 @@ import (
 type extractorFunc func(key string) (string, bool)
 
 type Extractor interface {
+	// ExtractHeaders extract http headers from sent request and binds to v
 	ExtractHeaders(v interface{}, req *http.Request) error
+	// ExtractQueries extract http url parameters from sent request and binds to v
 	ExtractQueries(v interface{}, req *http.Request) error
+	// ExtractForms extract http form values from sent request and binds to v
 	ExtractForms(v interface{}, req *http.Request) error
 }
 
 type extractor struct{}
 
+// NewParamExtractor returns an Extractor which extract
+// req.Header, req.FormValue, req.URL.Query values and
+// binds to sent struct interface
 func NewParamExtractor() Extractor {
 	return extractor{}
 }
