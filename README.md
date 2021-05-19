@@ -9,7 +9,7 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/senpathi/paramex)](https://goreportcard.com/report/github.com/senpathi/paramex)
 [![LICENSE](https://img.shields.io/github/license/senpathi/paramex.svg?style=flat-square)](https://github.com/senpathi/paramex/blob/master/LICENSE)
 
-Paramex is a library that binds all http request parameters to a Go struct annotated with `param`.
+Paramex is a library that binds `http request parameters` to a Go struct annotated with `param`.
 
 ##Description
 
@@ -69,7 +69,7 @@ func main() {
 Examples codes to extract http headers, url query values and form values are implemented in 
 [example](https://github.com/senpathi/paramex/tree/master/example) directory.
 
-###supported parameter types
+###Supported parameter types
 
  - string
  - bool
