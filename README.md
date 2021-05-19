@@ -1,4 +1,4 @@
-#paramex
+# paramex
 
 ![paramex_logo](./docs/images/logo.png)
 
@@ -11,7 +11,7 @@
 
 Paramex is a library that binds `http request parameters` to a Go struct annotated with `param`.
 
-##Description
+## Description
 
 To extract http parameters `(headers, url query values, form values)`, multiple code lines need to be written in
 `http Handlers`. 
@@ -69,7 +69,7 @@ func main() {
 Examples codes to extract http headers, url query values and form values are implemented in 
 [example](https://github.com/senpathi/paramex/tree/master/example) directory.
 
-###Supported parameter types
+### Supported parameter types
 
  - string
  - bool
