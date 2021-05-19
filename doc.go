@@ -1,4 +1,4 @@
-// Paramex is a library that binds http request parameters to a Go struct annotated with param.
+// Package paramex is a library that binds http request parameters to a Go struct annotated with param.
 //
 // Description
 //
