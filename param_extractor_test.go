@@ -2,6 +2,7 @@ package paramex
 
 import (
 	"fmt"
+	"github.com/google/uuid"
 	"net/http"
 	"net/url"
 	"reflect"
@@ -16,7 +17,7 @@ func makeRequest() (*http.Request, error) {
 			"age=" + url.QueryEscape(`20`) + "&" +
 			"height=" + url.QueryEscape(`1.78`) + "&" +
 			"married=" + url.QueryEscape(`false`)
-	path := fmt.Sprintf("https://httpbin.org/get?%s", params)
+	path := fmt.Sprintf("https://nipuna.lk?%s", params)
 
 	reqForm := url.Values{}
 	reqForm.Set(`name`, `form_name`)
@@ -277,6 +278,23 @@ func TestExtractor_Errors(t *testing.T) {
 			t.Errorf(`expexted [%v], but received [%v]`, exErr, err.Error())
 		}
 	})
+
+	t.Run(`test unmarshal type error "uuid.UUID{}"`, func(t *testing.T) {
+		obj := uuidError{}
+		err := extractor.ExtractHeaders(&obj, req)
+		if err == nil {
+			t.Errorf(`expected "ErrorUnmarshalType", but received %v`, nil)
+			return
+		}
+		_, ok := err.(ErrorUnmarshalType)
+		if !ok {
+			t.Errorf(`expected "ErrorUnmarshalType", but received %v`, reflect.TypeOf(err))
+		}
+		exErr := `error unmarshalling [header_name] into [uuid] due to invalid UUID length: 11`
+		if err.Error() != exErr {
+			t.Errorf(`expexted [%v], but received [%v]`, exErr, err.Error())
+		}
+	})
 }
 
 type headerParams struct {
@@ -328,6 +346,10 @@ type float32Error struct {
 
 type float64Error struct {
 	Name float64 `param:"name"`
+}
+
+type uuidError struct {
+	Name uuid.UUID `param:"name"`
 }
 
 type unSupportedTypeError struct {
