@@ -2,13 +2,14 @@ package paramex
 
 import (
 	"fmt"
-	"github.com/google/uuid"
 	"net/http"
 	"net/url"
 	"reflect"
 	"strconv"
 	"strings"
 	"testing"
+
+	"github.com/google/uuid"
 )
 
 func makeRequest() (*http.Request, error) {
@@ -70,6 +71,57 @@ func TestParamExtractor_ExtractQuery(t *testing.T) {
 	fmt.Println(fmt.Sprintf(`request headers := %v`, headers))
 	fmt.Println(fmt.Sprintf(`request forms := %v`, forms))
 	fmt.Println(fmt.Sprintf(`request queries := %v`, queries))
+}
+
+func TestExtractor_Types(t *testing.T) {
+	req, err := http.NewRequest(`POST`, "https://nipuna.lk", nil)
+	if err != nil {
+		t.Error(`error creating request`, err)
+		t.Fail()
+	}
+	testUUID := uuid.New()
+	req.Header.Set(`string`, `test_string`)
+	req.Header.Set(`bool`, `true`)
+	req.Header.Set(`int32`, `25`)
+	req.Header.Set(`int`, `30`)
+	req.Header.Set(`int64`, `35`)
+	req.Header.Set(`float32`, `123.456`)
+	req.Header.Set(`float64`, `987.654`)
+	req.Header.Set(`uuid`, testUUID.String())
+
+	extractor := NewParamExtractor()
+
+	obj := &types{}
+	err = extractor.ExtractHeaders(obj, req)
+	if err != nil {
+		t.Error(`error extracting request headers`, err)
+		t.Fail()
+	}
+
+	if obj.TypeString != `test_string` {
+		t.Fatalf(`expected [%s], but received [%v]`, `test_string`, obj.TypeString)
+	}
+	if !obj.TypeBool {
+		t.Fatalf(`expected [%t], but received [%v]`, true, obj.TypeBool)
+	}
+	if obj.TypeInt32 != 25 {
+		t.Fatalf(`expected [%d], but received [%v]`, 25, obj.TypeInt32)
+	}
+	if obj.TypeInt != 30 {
+		t.Fatalf(`expected [%d], but received [%v]`, 30, obj.TypeInt)
+	}
+	if obj.TypeInt64 != 35 {
+		t.Fatalf(`expected [%d], but received [%v]`, 35, obj.TypeInt64)
+	}
+	if obj.TypeFloat32 != 123.456 {
+		t.Fatalf(`expected [%f], but received [%v]`, 123.456, obj.TypeFloat32)
+	}
+	if obj.TypeFloat64 != 987.654 {
+		t.Fatalf(`expected [%f], but received [%v]`, 987.654, obj.TypeFloat64)
+	}
+	if obj.TypeUUID != testUUID {
+		t.Fatalf(`expected [%v], but received [%v]`, testUUID, obj.TypeUUID)
+	}
 }
 
 func TestExtractor_ExtractHeaders_EmptyFieldTag(t *testing.T) {
@@ -316,6 +368,17 @@ type queryParams struct {
 	Age     int32   `param:"age"`
 	Height  float32 `param:"height"`
 	Married bool    `param:"married"`
+}
+
+type types struct {
+	TypeString  string    `param:"string"`
+	TypeBool    bool      `param:"bool"`
+	TypeInt32   int32     `param:"int32"`
+	TypeInt     int       `param:"int"`
+	TypeInt64   int64     `param:"int64"`
+	TypeFloat32 float32   `param:"float32"`
+	TypeFloat64 float64   `param:"float64"`
+	TypeUUID    uuid.UUID `param:"uuid"`
 }
 
 type emptyTag struct {
