@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"reflect"
 	"strconv"
+
+	"github.com/google/uuid"
 )
 
 type extractorFunc func(key string) (string, bool)
@@ -154,6 +156,14 @@ func (p extractor) extract(v interface{}, keyExtractor extractorFunc) error {
 			if err != nil {
 				return ErrorUnmarshalType{
 					fmt.Errorf(`error unmarshalling [%v] into [float64] due to %v`, valueStr, err)}
+			}
+			elem.Field(i).Set(reflect.ValueOf(value))
+
+		case reflect.TypeOf(uuid.UUID{}):
+			value, err := uuid.Parse(valueStr)
+			if err != nil {
+				return ErrorUnmarshalType{
+					fmt.Errorf(`error unmarshalling [%v] into [uuid] due to %v`, valueStr, err)}
 			}
 			elem.Field(i).Set(reflect.ValueOf(value))
 
