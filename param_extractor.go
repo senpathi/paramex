@@ -10,6 +10,16 @@ import (
 
 type extractorFunc func(key string) (string, bool)
 
+const (
+	stringType  = string("")
+	boolType    = true
+	int32Type   = int32(0)
+	intType     = int(0)
+	int64Type   = int64(0)
+	float32Type = float32(0)
+	float64Type = float64(0)
+)
+
 // The Extractor interface is implemented to extract http request headers, form values
 // and url query values
 type Extractor interface {
@@ -95,11 +105,11 @@ func (p extractor) extract(v interface{}, keyExtractor extractorFunc) error {
 			continue
 		}
 
-		switch field.Type.Kind() {
-		case reflect.String:
+		switch field.Type {
+		case reflect.TypeOf(stringType):
 			elem.Field(i).Set(reflect.ValueOf(valueStr))
 
-		case reflect.Bool:
+		case reflect.TypeOf(boolType):
 			value, err := strconv.ParseBool(valueStr)
 			if err != nil {
 				return ErrorUnmarshalType{
@@ -107,7 +117,7 @@ func (p extractor) extract(v interface{}, keyExtractor extractorFunc) error {
 			}
 			elem.Field(i).Set(reflect.ValueOf(value))
 
-		case reflect.Int32:
+		case reflect.TypeOf(int32Type):
 			value, err := strconv.Atoi(valueStr)
 			if err != nil {
 				return ErrorUnmarshalType{
@@ -115,7 +125,7 @@ func (p extractor) extract(v interface{}, keyExtractor extractorFunc) error {
 			}
 			elem.Field(i).Set(reflect.ValueOf(int32(value)))
 
-		case reflect.Int:
+		case reflect.TypeOf(intType):
 			value, err := strconv.Atoi(valueStr)
 			if err != nil {
 				return ErrorUnmarshalType{
@@ -123,7 +133,7 @@ func (p extractor) extract(v interface{}, keyExtractor extractorFunc) error {
 			}
 			elem.Field(i).Set(reflect.ValueOf(value))
 
-		case reflect.Int64:
+		case reflect.TypeOf(int64Type):
 			value, err := strconv.ParseInt(valueStr, 10, 64)
 			if err != nil {
 				return ErrorUnmarshalType{
@@ -131,7 +141,7 @@ func (p extractor) extract(v interface{}, keyExtractor extractorFunc) error {
 			}
 			elem.Field(i).Set(reflect.ValueOf(value))
 
-		case reflect.Float32:
+		case reflect.TypeOf(float32Type):
 			value, err := strconv.ParseFloat(valueStr, 32)
 			if err != nil {
 				return ErrorUnmarshalType{
@@ -139,7 +149,7 @@ func (p extractor) extract(v interface{}, keyExtractor extractorFunc) error {
 			}
 			elem.Field(i).Set(reflect.ValueOf(float32(value)))
 
-		case reflect.Float64:
+		case reflect.TypeOf(float64Type):
 			value, err := strconv.ParseFloat(valueStr, 64)
 			if err != nil {
 				return ErrorUnmarshalType{
