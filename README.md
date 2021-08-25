@@ -79,3 +79,4 @@ Examples codes to extract http headers, url query values and form values are imp
  - float32
  - float64
  - [uuid.UUID](https://github.com/google/uuid)
+ - []string (only for form values and query values)

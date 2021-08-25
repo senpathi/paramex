@@ -57,12 +57,13 @@
 //
 // Supported parameter types
 //
-//   	string
-//  	bool
-//  	int32
-//  	int
-//  	int64
-//  	float32
-//  	float64
-//  	https://github.com/google/uuid
+//  - string
+//  - bool
+//  - int32
+//  - int
+//  - int64
+//  - float32
+//  - float64
+// 	- []string (only for form values and query values)
+//  - https://github.com/google/uuid
 package paramex
