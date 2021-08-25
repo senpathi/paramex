@@ -74,27 +74,32 @@ func TestParamExtractor_ExtractQuery(t *testing.T) {
 }
 
 func TestExtractor_Types(t *testing.T) {
-	req, err := http.NewRequest(`POST`, "https://nipuna.lk", nil)
+	reqForm := url.Values{}
+	testUUID := uuid.New()
+	testStrArray := []string{`str1`, `str2`, `1`}
+	reqForm.Set(`string`, `test_string`)
+	reqForm.Set(`bool`, `true`)
+	reqForm.Set(`int32`, `25`)
+	reqForm.Set(`int`, `30`)
+	reqForm.Set(`int64`, `35`)
+	reqForm.Set(`float32`, `123.456`)
+	reqForm.Set(`float64`, `987.654`)
+	reqForm.Set(`uuid`, testUUID.String())
+	reqForm[`strArray`] = testStrArray
+
+	req, err := http.NewRequest(`POST`, "https://nipuna.lk", strings.NewReader(reqForm.Encode()))
 	if err != nil {
 		t.Error(`error creating request`, err)
 		t.Fail()
 	}
-	testUUID := uuid.New()
-	req.Header.Set(`string`, `test_string`)
-	req.Header.Set(`bool`, `true`)
-	req.Header.Set(`int32`, `25`)
-	req.Header.Set(`int`, `30`)
-	req.Header.Set(`int64`, `35`)
-	req.Header.Set(`float32`, `123.456`)
-	req.Header.Set(`float64`, `987.654`)
-	req.Header.Set(`uuid`, testUUID.String())
+	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	extractor := NewParamExtractor()
 
 	obj := &types{}
-	err = extractor.ExtractHeaders(obj, req)
+	err = extractor.ExtractForms(obj, req)
 	if err != nil {
-		t.Error(`error extracting request headers`, err)
+		t.Error(`error extracting request form values`, err)
 		t.Fail()
 	}
 
@@ -121,6 +126,9 @@ func TestExtractor_Types(t *testing.T) {
 	}
 	if obj.TypeUUID != testUUID {
 		t.Fatalf(`expected [%v], but received [%v]`, testUUID, obj.TypeUUID)
+	}
+	if !reflect.DeepEqual(obj.TypeStringArray, testStrArray) {
+		t.Fatalf(`expected [%v], but received [%v]`, testStrArray, obj.TypeStringArray)
 	}
 }
 
@@ -371,14 +379,15 @@ type queryParams struct {
 }
 
 type types struct {
-	TypeString  string    `param:"string"`
-	TypeBool    bool      `param:"bool"`
-	TypeInt32   int32     `param:"int32"`
-	TypeInt     int       `param:"int"`
-	TypeInt64   int64     `param:"int64"`
-	TypeFloat32 float32   `param:"float32"`
-	TypeFloat64 float64   `param:"float64"`
-	TypeUUID    uuid.UUID `param:"uuid"`
+	TypeString      string    `param:"string"`
+	TypeBool        bool      `param:"bool"`
+	TypeInt32       int32     `param:"int32"`
+	TypeInt         int       `param:"int"`
+	TypeInt64       int64     `param:"int64"`
+	TypeFloat32     float32   `param:"float32"`
+	TypeFloat64     float64   `param:"float64"`
+	TypeUUID        uuid.UUID `param:"uuid"`
+	TypeStringArray []string  `param:"strArray"`
 }
 
 type emptyTag struct {
