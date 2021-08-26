@@ -8,49 +8,51 @@
 //
 // Sample code example code to extract request form values using paramex is shown below.
 //
-//  package main
+//	package main
 //
-//  import (
-//  	"fmt"
-//  	"log"
-//  	"net/http"
-//  	"net/url"
-//  	"strings"
+//	import (
+//		"fmt"
+//		"log"
+//		"net/http"
+//		"net/url"
+//		"strings"
 //
-//  	"github.com/senpathi/paramex"
-//  )
+//		"github.com/senpathi/paramex"
+//	)
 //
-//  type formParams struct {
-//  	Name    string  `param:"name"`
-//  	Age     int     `param:"age"`
-//  	Height  float64 `param:"height"`
-//  	Married bool    `param:"married"`
-//  }
+//	type formParams struct {
+//		Name       string   `param:"name"`
+//		Age        int      `param:"age"`
+//		Height     float64  `param:"height"`
+//		Married    bool     `param:"married"`
+//		OtherNames []string `param:"other_names"`
+//	}
 //
-//  func main() {
-//  	reqForm := url.Values{}
-//  	reqForm.Set(`name`, `form_name`)
-//  	reqForm.Set(`age`, `50`)
-//  	reqForm.Set(`height`, `1.72`)
-//  	reqForm.Set(`married`, `true`)
+//	func main() {
+//		reqForm := url.Values{}
+//		reqForm.Set(`name`, `form_name`)
+//		reqForm.Set(`age`, `50`)
+//		reqForm.Set(`height`, `1.72`)
+//		reqForm.Set(`married`, `true`)
+//		reqForm[`other_names`] = []string{`form_test`, `form_example`}
 //
-//  	req, err := http.NewRequest(`POST`, `https://nipuna.lk`, strings.NewReader(reqForm.Encode()))
-//  	if err != nil {
-//  		log.Fatalln(err)
-//  	}
-//  	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+//		req, err := http.NewRequest(`POST`, `https://nipuna.lk`, strings.NewReader(reqForm.Encode()))
+//		if err != nil {
+//			log.Fatalln(err)
+//		}
+//		req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 //
-//  	forms := formParams{}
-//  	extractor := paramex.NewParamExtractor()
+//		forms := formParams{}
+//		extractor := paramex.NewParamExtractor()
 //
-//  	err = extractor.ExtractForms(&forms, req)
-//  	if err != nil {
-//  		log.Fatalln(fmt.Errorf(`error extracting forms due to %v`, err))
-//  	}
+//		err = extractor.ExtractForms(&forms, req)
+//		if err != nil {
+//			log.Fatalln(fmt.Errorf(`error extracting forms due to %v`, err))
+//		}
 //
-//  	fmt.Println(fmt.Sprintf(`request forms := %v`, forms))
-//  	//Output : request forms := {form_name 50 1.72 true}
-//  }
+//		fmt.Println(fmt.Sprintf(`request forms := %v`, forms))
+//		//Output : request forms := {form_name 50 1.72 true [form_test form_example]}
+//	}
 //
 // Examples codes to extract http headers, url query values and form values are implemented in
 // https://github.com/senpathi/paramex/tree/master/example directory.
